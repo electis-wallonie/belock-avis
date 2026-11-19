@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belock – Avis Google</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --or: #C99A35; --noir: #1D1D1B; --gris: #5C5C57; --creme: #F4F1EA; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #FFFFFF; color: var(--noir); font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  button, input { font: inherit; }
+  .page { max-width: 440px; margin: 0 auto; min-height: 100vh; padding: 36px 20px 32px; display: flex; flex-direction: column; gap: 22px; position: relative; }
+  .entete { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+  .entete img { height: 46px; width: auto; display: block; }
+  .trait { height: 4px; width: 48px; border-radius: 2px; background: var(--or); }
+  h1 { margin: 0; font-size: 24px; line-height: 1.2; font-weight: 800; }
+  .cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .recherche { display: flex; align-items: center; gap: 10px; height: 54px; padding: 0 18px; border-radius: 18px; background: var(--creme); border: 1.5px solid #E6E0D2; }
+  .recherche:focus-within { border-color: var(--noir); }
+  .recherche input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-size: 16px; color: var(--noir); }
+  .recherche input::placeholder { color: #6B6B66; }
+  .tris { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .tris button { min-height: 44px; padding: 6px 4px; border-radius: 12px; border: 1.5px solid #E2DDD1; background: #FFFFFF; color: var(--noir); font-size: 13px; font-weight: 800; line-height: 1.15; cursor: pointer; }
+  .tris button[aria-pressed="true"] { background: var(--noir); color: #FFFFFF; border-color: var(--noir); }
+
+  .liste { display: flex; flex-direction: column; gap: 12px; }
+  .agence { min-height: 78px; padding: 0 22px; border-radius: 18px; background: var(--noir); color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-decoration: none; transition: transform .12s ease; }
+  .agence:active { transform: scale(0.98); }
+  .agence .nom { display: block; font-size: 21px; font-weight: 900; letter-spacing: -0.01em; }
+  .agence .note { display: block; margin-top: 2px; font-size: 13px; color: #CFCBBF; }
+  .rond { width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--or); display: flex; align-items: center; justify-content: center; }
+  .vide { margin: 8px 0 0; text-align: center; font-size: 15px; color: var(--gris); }
+
+  .retour { position: absolute; top: 16px; left: 16px; width: 44px; height: 44px; border-radius: 50%; background: #F1EEE6; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+  .message { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .etoiles { display: flex; gap: 4px; }
+  .message h2 { margin: 0; font-size: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; }
+  .message p { margin: 0; font-size: 16px; line-height: 1.4; color: #3A3A36; }
+  .cadre { background: var(--or); border-radius: 28px; padding: 16px; }
+  .cadre .blanc { background: #FFFFFF; border-radius: 18px; padding: 20px; display: flex; justify-content: center; }
+  .cadre .blanc img { width: 100%; max-width: 270px; aspect-ratio: 1; height: auto; display: block; image-rendering: pixelated; }
+  .cadre .titre { margin: 14px 0 2px; text-align: center; font-size: 18px; font-weight: 900; }
+  .cadre .sous { margin: 0; text-align: center; font-size: 13px; font-weight: 600; }
+  .actions { display: flex; flex-direction: column; gap: 12px; }
+  .btn { height: 60px; border-radius: 18px; font-size: 18px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
+  .btn-noir { border: 0; background: var(--noir); color: #FFFFFF; }
+  .btn-blanc { border: 2px solid var(--noir); background: #FFFFFF; color: var(--noir); }
+  .partage { display: none; flex-direction: column; gap: 10px; padding: 14px; border-radius: 18px; background: var(--creme); }
+  .partage.ouvert { display: flex; }
+  .partage .btn { height: 54px; font-size: 16px; }
+  .lien-texte { font-size: 13px; color: var(--gris); text-align: center; word-break: break-all; }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(120px); background: var(--noir); color: #FFFFFF; padding: 12px 18px; border-radius: 14px; font-size: 15px; font-weight: 700; transition: transform .25s ease; z-index: 10; }
+  .toast.visible { transform: translateX(-50%) translateY(0); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Page d'accueil -->
+<main id="vue-liste" class="page">
+  <div class="entete">
+    <img src="logo.png" alt="Belock">
+    <div class="trait"></div>
+    <h1>Touchez votre agence</h1>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <label for="recherche" class="cache">Rechercher une agence</label>
+    <div class="recherche">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1B" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="recherche" type="search" placeholder="Rechercher une agence…" autocomplete="off">
+    </div>
+    <div class="tris" role="group" aria-label="Trier les agences">
+      <button type="button" data-tri="moins" aria-pressed="false">Moins d’avis</button>
+      <button type="button" data-tri="plus" aria-pressed="true">Plus d’avis</button>
+      <button type="button" data-tri="note" aria-pressed="false">Mieux notées</button>
+    </div>
+  </div>
+  <nav class="liste" id="liste" aria-label="Agences"></nav>
+  <p class="vide" id="vide" hidden></p>
+  <p class="vide" id="maj" style="margin-top:auto;font-size:12px"></p>
+</main>
+
+<!-- Fiche agence -->
+<main id="vue-fiche" class="page" hidden>
+  <a href="#" class="retour" aria-label="Retour aux agences">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D1D1B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+  </a>
+  <div class="entete">
+    <img src="logo.png" alt="Belock">
+    <div class="trait"></div>
+  </div>
+  <div class="message">
+    <div class="etoiles" role="img" aria-label="5 étoiles" id="etoiles"></div>
+    <h2>Votre avis compte<br>pour nous&nbsp;!</h2>
+    <p>Scannez avec l’appareil photo<br>de votre téléphone.</p>
+  </div>
+  <div class="cadre">
+    <div class="blanc"><img id="qr" src="" alt=""></div>
+    <p class="titre" id="fiche-nom"></p>
+    <p class="sous" id="fiche-note"></p>
+  </div>
+  <div class="actions">
+    <button type="button" class="btn btn-noir" id="copier">Copier le lien</button>
+    <button type="button" class="btn btn-blanc" id="partager" aria-expanded="false" aria-controls="partage">Partager le lien</button>
+    <div class="partage" id="partage">
+      <a class="btn btn-noir" id="whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-blanc" id="ouvrir" href="#" target="_blank" rel="noopener">Ouvrir la page d’avis</a>
+      <div class="lien-texte" id="lien-texte"></div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// Valeurs de secours : les vraies données viennent de data.json (mis à jour chaque jour automatiquement).
+let AGENCES = [
+  { id: 'bruxelles',          ville: 'Bruxelles',          note: 5.0, avis: 196, lien: 'https://g.page/r/CbY9gHwEaF_5EBM/review' },
+  { id: 'charleroi',          ville: 'Charleroi',          note: 4.9, avis: 393, lien: 'https://g.page/r/CcghlerhGuIdEBM/review' },
+  { id: 'gilly',              ville: 'Gilly',              note: 5.0, avis: 15,  lien: 'https://g.page/r/CSkpwsfDCEHuEBM/review' },
+  { id: 'keramis',            ville: 'Keramis',            note: 5.0, avis: 6,   lien: 'https://g.page/r/CU8yMdAeXhElEBM/review' },
+  { id: 'la-louviere',        ville: 'La Louvière',        note: 4.9, avis: 363, lien: 'https://g.page/r/CRvP-RP__AbbEBM/review' },
+  { id: 'mons',               ville: 'Mons',               note: 5.0, avis: 46,  lien: 'https://g.page/r/Cfx_gRdpA3ixEBM/review' },
+  { id: 'sint-pieters-leeuw', ville: 'Sint-Pieters-Leeuw', note: 4.5, avis: 15,  lien: 'https://g.page/r/CZ3G-ZXqPPuZEBM/review' }
+];
+
+const $ = (id) => document.getElementById(id);
+const fmtNote = (n) => n.toFixed(1).replace('.', ',');
+const norm = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+const ETOILE = '<svg width="26" height="26" viewBox="0 0 24 24" fill="#C99A35" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17.1 6.1 20.3l1.3-6.5L2.5 9.3l6.6-.8z"/></svg>';
+const FLECHE = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D1D1B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+$('etoiles').innerHTML = ETOILE.repeat(5);
+
+let tri = 'plus';
+let recherche = '';
+try { tri = localStorage.getItem('belock-tri') || 'plus'; } catch (e) {}
+
+const COMPARER = {
+  moins: (a, b) => a.avis - b.avis || a.ville.localeCompare(b.ville, 'fr'),
+  plus:  (a, b) => b.avis - a.avis || a.ville.localeCompare(b.ville, 'fr'),
+  note:  (a, b) => b.note - a.note || b.avis - a.avis
+};
+
+function afficherListe() {
+  const q = norm(recherche);
+  const items = AGENCES.filter(a => norm(a.ville).includes(q)).sort(COMPARER[tri]);
+  $('liste').innerHTML = items.map(a => `
+    <a class="agence" href="#${a.id}">
+      <span><span class="nom">${a.ville}</span><span class="note">★ ${fmtNote(a.note)} · ${a.avis} avis</span></span>
+      <span class="rond">${FLECHE}</span>
+    </a>`).join('');
+  $('vide').hidden = items.length > 0;
+  $('vide').textContent = items.length ? '' : `Aucune agence ne correspond à « ${recherche} ».`;
+  document.querySelectorAll('.tris button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tri === tri)));
+}
+
+function afficherFiche(a) {
+  $('qr').src = `qr/${a.id}.png`;
+  $('qr').alt = `QR code vers la page d'avis Google de Belock Serrurier ${a.ville}`;
+  $('fiche-nom').textContent = `Belock Serrurier · ${a.ville}`;
+  $('fiche-note').textContent = `★ ${fmtNote(a.note)} · ${a.avis} avis Google`;
+  const texte = `Merci pour votre confiance ! Laissez-nous un avis sur Belock Serrurier ${a.ville} : ${a.lien}`;
+  $('whatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(texte);
+  $('ouvrir').href = a.lien;
+  $('lien-texte').textContent = a.lien;
+  $('copier').textContent = 'Copier le lien';
+  $('partage').classList.remove('ouvert');
+  $('partager').setAttribute('aria-expanded', 'false');
+  $('copier').onclick = async () => {
+    try { await navigator.clipboard.writeText(a.lien); $('copier').textContent = '✓ Lien copié'; toast('Lien copié — collez-le dans un SMS ou un e-mail.'); }
+    catch (e) { $('partage').classList.add('ouvert'); toast('Copie impossible : sélectionnez le lien ci-dessous.'); }
+  };
+  document.title = `Belock – ${a.ville}`;
+}
+
+function router() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  const a = AGENCES.find(x => x.id === id);
+  $('vue-liste').hidden = !!a;
+  $('vue-fiche').hidden = !a;
+  if (a) afficherFiche(a); else { document.title = 'Belock – Avis Google'; afficherListe(); }
+  window.scrollTo(0, 0);
+}
+
+let minuteur;
+function toast(t) {
+  $('toast').textContent = t; $('toast').classList.add('visible');
+  clearTimeout(minuteur); minuteur = setTimeout(() => $('toast').classList.remove('visible'), 2600);
+}
+
+$('recherche').addEventListener('input', e => { recherche = e.target.value; afficherListe(); });
+document.querySelectorAll('.tris button').forEach(b => b.addEventListener('click', () => {
+  tri = b.dataset.tri; try { localStorage.setItem('belock-tri', tri); } catch (e) {} afficherListe();
+}));
+$('partager').addEventListener('click', async () => {
+  const a = AGENCES.find(x => x.id === decodeURIComponent(location.hash.slice(1)));
+  if (a && navigator.share) {
+    try {
+      await navigator.share({ title: 'Belock Serrurier ' + a.ville, text: `Merci pour votre confiance ! Laissez-nous un avis sur Belock Serrurier ${a.ville} :`, url: a.lien });
+      return;
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  const o = $('partage').classList.toggle('ouvert');
+  $('partager').setAttribute('aria-expanded', String(o));
+});
+document.querySelector('.retour').addEventListener('click', e => { e.preventDefault(); history.replaceState(null, '', location.pathname + location.search); router(); });
+window.addEventListener('hashchange', router);
+router();
+
+fetch('data.json', { cache: 'no-store' })
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(d => {
+    if (Array.isArray(d.agences) && d.agences.length) {
+      AGENCES = d.agences.map(a => ({ id: a.id, ville: a.ville, note: Number(a.note), avis: Number(a.avis), lien: a.lien }));
+    }
+    if (d.mis_a_jour) {
+      const date = new Date(d.mis_a_jour.replace('Z', ':00Z'));
+      if (!isNaN(date)) $('maj').textContent = 'Avis Google mis à jour le ' + date.toLocaleDateString('fr-BE', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    router();
+  })
+  .catch(() => {});
+</script>
+</body>
+</html>

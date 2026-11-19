@@ -1,0 +1,61 @@
+{
+  "mis_a_jour": "2026-11-19T22:00Z",
+  "agences": [
+    {
+      "id": "bruxelles",
+      "ville": "Bruxelles",
+      "nom_google": "Belock - Serrurier Bruxelles",
+      "note": 5.0,
+      "avis": 196,
+      "lien": "https://g.page/r/CbY9gHwEaF_5EBM/review"
+    },
+    {
+      "id": "charleroi",
+      "ville": "Charleroi",
+      "nom_google": "BeLock - Serrurier Charleroi",
+      "note": 4.9,
+      "avis": 393,
+      "lien": "https://g.page/r/CcghlerhGuIdEBM/review"
+    },
+    {
+      "id": "gilly",
+      "ville": "Gilly",
+      "nom_google": "Belock - Serrurier Gilly",
+      "note": 5.0,
+      "avis": 15,
+      "lien": "https://g.page/r/CSkpwsfDCEHuEBM/review"
+    },
+    {
+      "id": "keramis",
+      "ville": "Keramis",
+      "nom_google": "Belock - Serrurier Keramis",
+      "note": 5.0,
+      "avis": 6,
+      "lien": "https://g.page/r/CU8yMdAeXhElEBM/review"
+    },
+    {
+      "id": "la-louviere",
+      "ville": "La Louvière",
+      "nom_google": "Belock - Serrurier La Louvière",
+      "note": 4.9,
+      "avis": 363,
+      "lien": "https://g.page/r/CRvP-RP__AbbEBM/review"
+    },
+    {
+      "id": "mons",
+      "ville": "Mons",
+      "nom_google": "BeLock - Serrurier Mons",
+      "note": 5.0,
+      "avis": 46,
+      "lien": "https://g.page/r/Cfx_gRdpA3ixEBM/review"
+    },
+    {
+      "id": "sint-pieters-leeuw",
+      "ville": "Sint-Pieters-Leeuw",
+      "nom_google": "BeLock - Serrurier Sint Pieters Leeuw",
+      "note": 4.5,
+      "avis": 15,
+      "lien": "https://g.page/r/CZ3G-ZXqPPuZEBM/review"
+    }
+  ]
+}
